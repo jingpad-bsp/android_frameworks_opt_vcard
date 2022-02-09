@@ -1795,8 +1795,18 @@ public class VCardEntry {
             }
             if (!hasPauseOrWait) {
                 final int formattingType = VCardUtils.getPhoneNumberFormat(mVCardType);
+                /**
+                 * UNISOC:bug272771 after remove “-” between the phone number
+                 * Original Android code:
                 formattedNumber = PhoneNumberUtilsPort.formatNumber(
                         builder.toString(), formattingType);
+                 * @{
+                 */
+                formattedNumber = PhoneNumberUtilsPort.formatNumber(
+                        builder.toString(), PhoneNumberUtils.FORMAT_UNKNOWN);
+                /**
+                 * @}
+                 */
             } else {
                 formattedNumber = builder.toString();
             }
@@ -2562,6 +2572,15 @@ public class VCardEntry {
             builder.withValue(RawContacts.ACCOUNT_NAME, null);
             builder.withValue(RawContacts.ACCOUNT_TYPE, null);
         }
+        /*
+        * UNISOC:modify for Bug269284
+        *
+        * @{
+        */
+        builder.withValue(RawContacts.AGGREGATION_MODE, RawContacts.AGGREGATION_MODE_DISABLED);
+        /*
+        * @}
+        */
         operationList.add(builder.build());
 
         int start = operationList.size();
